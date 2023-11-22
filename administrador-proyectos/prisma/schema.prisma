@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch","fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Proyecto {
+  ProyectoId Int @id @default(autoincrement())
+  ProyectoNombre String @unique
+  ProyectoCompletado Boolean @default(false)
+  DefaultActivo Boolean @default(true)
+  tareas Tareas[]//Indica que tendra varios registros en la tabla tareas
+}
+
+model Tareas {
+  TareasId Int @id @default(autoincrement())
+  TareasNombre String @unique
+  TareasCompletada Boolean @default(false)
+  TareasDescripcion String?
+  proyecto Proyecto? @relation(fields: [proyectoid], references: [ProyectoId])
+  proyectoid  Int?
+}
