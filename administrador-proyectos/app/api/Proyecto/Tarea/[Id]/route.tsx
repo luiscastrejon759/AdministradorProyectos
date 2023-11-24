@@ -18,8 +18,8 @@ export async function GET(req: Request, { params }: any) {
             return NextResponse.json(tarea);
         } else {
             console.log(params.id)
-            const tarea = await prisma.tareas.findFirst({
-                where: {TareasNombre: params.id},
+            const tarea = await prisma.tareas.findMany({
+                where: {TareasNombre: {search:params.id}},
             });
             if (!tarea) {
                 console.log("8: Error")
