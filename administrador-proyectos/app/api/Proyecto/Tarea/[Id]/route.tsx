@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../prisma";
 
-
-//Buscar una tarea por id o por nombre
+//Buscar una tarea por id o por nombre completo o parte del nombre
 export async function GET(req: Request, { params }: any) {
     const datoConvertido = parseInt(params.id);
-    
     try {
         if (!Number.isNaN(datoConvertido)) {
             const tarea = await prisma.tareas.findFirst({
@@ -17,9 +15,9 @@ export async function GET(req: Request, { params }: any) {
             console.log("Exito", tarea)
             return NextResponse.json(tarea);
         } else {
-            console.log(params.id)
+            //Busca subcadena en columna
             const tarea = await prisma.tareas.findMany({
-                where: {TareasNombre: {search:params.id}},
+                where: { TareasNombre: { search: params.id } },
             });
             if (!tarea) {
                 console.log("8: Error")
@@ -33,11 +31,9 @@ export async function GET(req: Request, { params }: any) {
     }
 }
 
-
 //Actualizar Tarea
 export async function PUT(req: Request, { params }: any) {
     const datoConvertido = parseInt(params.id);
-
     try {
         if (!Number.isNaN(datoConvertido)) {
             const datos = await req.json();
@@ -85,3 +81,5 @@ export async function DELETE(req: Request, { params }: any) {
         return NextResponse.json({ 'error': err.message });
     }
 }
+
+
