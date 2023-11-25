@@ -3,18 +3,23 @@ import { prisma } from "../../../prisma";
 
 //Obtiene todas las tareas de la bd
 export async function GET() {
+   // const id = parseInt(params.id);
     try {
-        const proyectos = await prisma.tareas.findMany();
-        if (!proyectos) {
+        const tareas = await prisma.tareas.findMany();
+        if (!tareas) {
             console.log("8: Error")
-            return NextResponse.json({ "Error": "No se encontro la tarea" });
+            return NextResponse.json({ "Error": "No se encontraron tareas" });
         }
-        return NextResponse.json(proyectos);
+        console.log(JSON.stringify(tareas))
+        return NextResponse.json(tareas);
     } catch (err) {
         console.log(err)
         return NextResponse.json({ 'error': err });
+
     }
 }
+
+
 
 //Guardara la tarea
 export async function POST(req: Request) {
@@ -49,3 +54,5 @@ export async function PUT(req: Request, { params }: any) {
         return NextResponse.json({ 'error': err.message });
     }
 }*/
+
+
