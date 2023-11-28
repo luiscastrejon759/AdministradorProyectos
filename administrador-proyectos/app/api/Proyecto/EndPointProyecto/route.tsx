@@ -6,12 +6,16 @@ import { NextApiRequest } from "next";
 export async function GET() {
     try {
 
-        const proyectos = await prisma.proyecto.findMany();
+        const proyectos = await prisma.proyecto.findMany({
+            orderBy: {
+                ProyectoId: 'asc',
+            }
+        });
         if (!proyectos) {
             console.log("8: Error")
             return NextResponse.json({ "Error": "No se encontro la tarea" });
         }
-        console.log("Lista proyectos:"+JSON.stringify(proyectos))
+        console.log("Lista proyectos:" + JSON.stringify(proyectos))
         return NextResponse.json(proyectos);
     } catch (err) {
         console.log(err)
