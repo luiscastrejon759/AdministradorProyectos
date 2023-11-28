@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../prisma";
 
 //Buscar una tarea por id o por nombre completo o parte del nombre
-export async function GET(req: Request, { params }: any) {
+export async function GET(req:Request, {params} : any) {
     const datoConvertido = parseInt(params.id);
+    console.log(params.id)
     try {
         if (!Number.isNaN(datoConvertido)) {
             const tarea = await prisma.tareas.findFirst({

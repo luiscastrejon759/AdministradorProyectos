@@ -11,6 +11,7 @@ export async function GET() {
             console.log("8: Error")
             return NextResponse.json({ "Error": "No se encontro la tarea" });
         }
+        console.log("Lista proyectos:"+JSON.stringify(proyectos))
         return NextResponse.json(proyectos);
     } catch (err) {
         console.log(err)

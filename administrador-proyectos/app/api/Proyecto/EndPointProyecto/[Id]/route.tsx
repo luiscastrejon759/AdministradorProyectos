@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../../../prisma";
 
 //Buscar una tarea por id o por nombre
-export async function GET(req: Request, { params }: any) {
+export async function GET( req:Request, {params} : any) {
+    console.log("id: "+params.id)
     const datoConvertido = parseInt(params.id);
-
+    
     try {
         if (!Number.isNaN(datoConvertido)) {
             const proyecto = await prisma.proyecto.findFirst({
