@@ -3,13 +3,13 @@ import { prisma } from "../../../prisma";
 
 //Obtiene todas las tareas de la bd
 export async function GET() {
-   // const id = parseInt(params.id);
+    // const id = parseInt(params.id);
     try {
         const tareas = await prisma.tareas.findMany({
             orderBy: {
                 TareasId: 'asc',
-              }
-            });
+            }
+        });
         if (!tareas) {
             console.log("8: Error")
             return NextResponse.json({ "Error": "No se encontraron tareas" });

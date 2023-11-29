@@ -16,6 +16,7 @@ export async function GET(req: Request, { params }: any) {
             const tarea = await prisma.tareas.findMany({
                 where: { proyectoid: datoConvertido }
             });
+
             if (!tarea) {
                 return NextResponse.json({ "Error": "No se encontro la tarea" });
             }
