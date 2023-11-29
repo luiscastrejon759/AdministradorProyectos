@@ -1,14 +1,20 @@
+
+//'use client' 
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../prisma";
+//import { useState } from "react";
+
+
 
 //Buscar una tarea por id o por nombre completo o parte del nombre
 export async function GET(req: Request, { params }: any) {
+    //  const [lista,setLista]:any=useState();
     const datoConvertido = parseInt(params.Id);
-    console.log(params.Id)
+
     try {
         if (!Number.isNaN(datoConvertido)) {
-            const tarea = await prisma.tareas.findFirst({
-                where: { TareasId: datoConvertido }
+            const tarea = await prisma.tareas.findMany({
+                where: { proyectoid: datoConvertido }
             });
             if (!tarea) {
                 return NextResponse.json({ "Error": "No se encontro la tarea" });
@@ -16,20 +22,32 @@ export async function GET(req: Request, { params }: any) {
             console.log("Exito", tarea)
             return NextResponse.json(tarea);
         } else {
-            //Busca subcadena en columna
-            const tarea = await prisma.tareas.findMany({
-                where: { TareasNombre: { search: params.Id } },
+
+            const consulta = `%${params.Id}%`;
+            console.log(consulta)
+            //const queryResult = await prisma.queryRaw('select * from "public"."Client"');
+            const tarea: any = await prisma.$queryRaw`SELECT * FROM "public"."Proyecto" WHERE "ProyectoNombre" like ${consulta}`
+            console.log(tarea)
+            const listaTareasProyectos = await prisma.tareas.findMany({
+                where: { proyectoid: { in: tarea.map((row: any) => row.ProyectoId) } },
             });
+            console.log(listaTareasProyectos)
             if (!tarea) {
-                console.log("8: Error")
                 return NextResponse.json({ "Error": "No se encontro la tarea" });
             }
-            //Devolvemos lista de Tareasn
+            console.log("Exito 1", tarea)
             return NextResponse.json(tarea);
         }
     } catch (err: any) {
         return NextResponse.json({ 'error': err.message });
     }
+}
+
+async function ListaTareas(id: any) {
+    const tarea = await prisma.tareas.findMany({
+        where: { TareasNombre: { search: id } },
+    })
+    return tarea;
 }
 
 //Eliminar una tarea

@@ -7,9 +7,16 @@ export async function GET() {
     try {
 
         const proyectos = await prisma.proyecto.findMany({
+            include: {
+                tareas: {
+                    select: {
+                        TareasId: true, TareasNombre: true, TareasCompletada: true, TareasDescripcion: true, proyectoid: true,
+                    },
+                },
+            },
             orderBy: {
                 ProyectoId: 'asc',
-            }
+            },
         });
         if (!proyectos) {
             console.log("8: Error")

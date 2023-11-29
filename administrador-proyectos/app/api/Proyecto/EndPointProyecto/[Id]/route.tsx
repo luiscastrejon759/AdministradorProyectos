@@ -10,7 +10,10 @@ export async function GET(req: Request, { params }: any) {
     try {
         if (!Number.isNaN(datoConvertido)) {
             const proyecto = await prisma.proyecto.findFirst({
-                where: { ProyectoId: datoConvertido }
+                where: { ProyectoId: datoConvertido },
+                orderBy: {
+                    ProyectoId: 'asc',
+                },
             });
             if (!proyecto) {
                 return NextResponse.json({ "Error": "No se encontro la tarea" });
@@ -18,16 +21,14 @@ export async function GET(req: Request, { params }: any) {
             console.log("Exito", proyecto)
             return NextResponse.json(proyecto);
         } else {
-            console.log(params.id)
-            const proyecto = await prisma.proyecto.findFirst({
-                where: { ProyectoNombre: params.Id },
-            });
-            if (!proyecto) {
-                console.log("8: Error")
+            const consulta = `%${params.Id}%`;
+            console.log(consulta)
+            const proyectos: any = await prisma.$queryRaw`SELECT * FROM "public"."Proyecto" WHERE "ProyectoNombre" like ${consulta}`
+            if (!proyectos) {
                 return NextResponse.json({ "Error": "No se encontro la tarea" });
             }
-            //Devolvemos lista de Tareasn
-            return NextResponse.json(proyecto);
+            console.log("Exito 1", proyectos)
+            return NextResponse.json(proyectos);
         }
     } catch (err: any) {
         return NextResponse.json({ 'error': err.message });
