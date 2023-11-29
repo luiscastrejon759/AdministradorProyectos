@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import Tareas from '../tareas/page'
 
+
 export default function List() { 
 
 const [proyectos, setProyectos] = useState([]); 
@@ -21,34 +22,51 @@ const [proyectos, setProyectos] = useState([]);
     fetchData();
   }, []);
 
-  const obtenerTareas = (idProyecto: any) => {
+  const obtenerTareas = (idProyecto) => {
     console.log('id del proyecto' , idProyecto)
     //esto es un experimento
     const fetchDataTareas = async () => {      
-        //let url = '/api/Proyecto/Tarea/' + idProyecto
-       let url = 'http://localhost:3000/api/Proyecto/Tarea/' + idProyecto
+       const url = '/api/Proyecto/Tarea/' + idProyecto     
        console.log('url', url)
-        const consultaGral = await fetch(url, {
+        const consultaGralTareas = await fetch(url, {
             method: 'GET',               
         });      
-      const respuestaGral = await consultaGral.json()
-       console.log('respuesta de las tareas ',respuestaGral)
-      setTareas(respuestaGral)
+      const respuestaGralTareas = await consultaGralTareas.json()
+       console.log('respuesta de las tareas ',respuestaGralTareas)
+      setTareas(respuestaGralTareas)
     }
     fetchDataTareas();
   }
+
+  const seleccionada = (x) => {   
+    console.log('seleccionada', x) 
+  }
+
+   const quitarseleccion = (y) => { 
+    console.log('quitarseleccion', y) 
+    
+  }  
+  const eliminar = id => {
+    console.log('eliminar', id) 
+   
+   }
+
+  const edicion = i => {        
+    console.log('edicion', i) 
+  };  
  
+  
   return(
     <div>
      <h1>PROYECTOS</h1>
         <div className='item-container'>
-        {proyectos.map((proyecto) => (
+        {proyectos && proyectos.map((proyecto) => (
             <li key={proyecto.ProyectoId}>   
             <button onClick={(e) => obtenerTareas(proyecto.ProyectoId)} >{proyecto.ProyectoNombre}</button>
             </li>  
         ))}
         </div>
-        <Tareas listaTareas={tareas}/>
+        <Tareas listaTareas={tareas} edicion={edicion} eliminar={eliminar} seleccionada={seleccionada} quitarseleccion={quitarseleccion} />
   </div>
   );
 }
