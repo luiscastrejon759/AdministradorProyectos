@@ -20,7 +20,7 @@ export async function GET(req: Request, { params }: any) {
             if (!tarea) {
                 return NextResponse.json({ "Error": "No se encontro la tarea" });
             }
-            console.log("Exito", tarea)
+            console.log("Respuesta: ", tarea)
             return NextResponse.json(tarea);
         } else {
 
