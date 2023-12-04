@@ -1,11 +1,11 @@
 import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../prisma";
+import { prisma } from "../../../prisma";
 
-//Buscar una tarea por id o por nombre
+//Buscar un proyecto por id o por nombre
 export async function GET(req: Request, { params }: any) {
-    console.log("id: " + params.Id)
-    const datoConvertido = parseInt(params.Id);
+    console.log("id: " + params.idProyecto)
+    const datoConvertido = parseInt(params.idProyecto);
 
     try {
         if (!Number.isNaN(datoConvertido)) {
@@ -21,7 +21,7 @@ export async function GET(req: Request, { params }: any) {
             console.log("Exito", proyecto)
             return NextResponse.json(proyecto);
         } else {
-            const consulta = `%${params.Id}%`;
+            const consulta = `%${params.idProyecto}%`;
             console.log(consulta)
             const proyectos: any = await prisma.$queryRaw`SELECT * FROM "public"."Proyecto" WHERE "ProyectoNombre" like ${consulta}`
             if (!proyectos) {
@@ -38,7 +38,7 @@ export async function GET(req: Request, { params }: any) {
 export async function PUT(req: Request, { params }: any) {
     const actualizacion = await req.json();
     try {
-        const datoConvertido = parseInt(params.Id);
+        const datoConvertido = parseInt(params.idProyecto);
         if (!Number.isNaN(datoConvertido)) {
             const tareaActualizada = await prisma.proyecto.update({
                 data: actualizacion,
@@ -53,7 +53,7 @@ export async function PUT(req: Request, { params }: any) {
         } else {
             const tareaActualizada = await prisma.proyecto.update({
                 data: actualizacion,
-                where: { ProyectoNombre: params.Id },
+                where: { ProyectoNombre: params.idProyecto },
             })
 
             if (!tareaActualizada) {
@@ -70,7 +70,7 @@ export async function PUT(req: Request, { params }: any) {
 export async function DELETE(req: Request, { params }: any) {
     // const actualizacion = await req.json();
     try {
-        const datoConvertido = parseInt(params.Id);
+        const datoConvertido = parseInt(params.idProyecto);
         if (!Number.isNaN(datoConvertido)) {
             const proyectoEliminado = await prisma.proyecto.delete({
                 where: { ProyectoId: datoConvertido },
@@ -83,7 +83,7 @@ export async function DELETE(req: Request, { params }: any) {
             return NextResponse.json(proyectoEliminado);
         } else {
             const proyectoEliminado = await prisma.proyecto.delete({
-                where: { ProyectoNombre: params.Id },
+                where: { ProyectoNombre: params.idProyecto },
             })
 
             if (!proyectoEliminado) {

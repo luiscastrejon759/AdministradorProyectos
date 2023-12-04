@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../prisma";
-import { NextApiRequest } from "next";
+import { prisma } from "../../prisma";
 
 //Obtiene todas los proyectos de la bd
 export async function GET() {
     try {
-
         const proyectos = await prisma.proyecto.findMany({
             orderBy: {
                 ProyectoId: 'asc',
             },
         });
-
         if (!proyectos) {
             console.log("8: Error")
-            return NextResponse.json({ "Error": "No se encontro la tarea" });
+            return NextResponse.json({ "Error": "No se encontro ningún proyecto" });
         }
         console.log("Lista proyectos:" + JSON.stringify(proyectos))
         return NextResponse.json(proyectos);
@@ -39,18 +36,4 @@ export async function POST(req: Request) {
 }
 
 
-/* const proyectos = await prisma.proyecto.findMany({
-            where: {
-                ProyectoNombre: { search: params.nombre_proyecto, },
-            },
-        });
-        if (!proyectos) {
-            console.log("8: Error")
-            return NextResponse.json({ "Error": "No se encontro la tarea" });
-        }
-        return NextResponse.json(proyectos);
-    } catch (err) {
-        console.log(err)
-        return NextResponse.json({ 'error': err });
-    } */
 
